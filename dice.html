@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Dice Roller · Khurram Rashid</title>
+  <!-- Google Font for clean look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.3s ease, color 0.3s ease;
+      color: #0f172a;
+    }
+
+    /* Dark mode class (applied via JS) */
+    body.dark {
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+
+    body.dark header,
+    body.dark footer {
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(12px);
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    body.dark .dice-card {
+      background: #1e293b;
+      box-shadow: 0 20px 30px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    body.dark .dice-face {
+      background: #0f172a;
+      border-color: #334155;
+    }
+
+    body.dark .dot {
+      background: #f1f5f9;
+    }
+
+    body.dark button.add-dice {
+      background: #334155;
+      color: #f1f5f9;
+      border-color: #475569;
+    }
+
+    body.dark button.add-dice:hover {
+      background: #475569;
+    }
+
+    body.dark .roll-btn {
+      background: #3b82f6;
+      color: white;
+    }
+
+    body.dark .roll-btn:hover {
+      background: #2563eb;
+    }
+
+    body.dark .remove-btn {
+      background: transparent;
+      border: 1px solid #f87171;
+      color: #f87171;
+    }
+
+    body.dark .remove-btn:hover {
+      background: rgba(248,113,113,0.15);
+    }
+
+    /* Fixed Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+      z-index: 50;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .header-title {
+      font-weight: 600;
+      font-size: 1.5rem;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .theme-toggle {
+      background: transparent;
+      border: 1px solid #cbd5e1;
+      border-radius: 2rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: white;
+      transition: all 0.2s;
+      color: #0f172a;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    body.dark .theme-toggle {
+      background: #1e293b;
+      border-color: #475569;
+      color: #e2e8f0;
+    }
+
+    .theme-toggle:hover {
+      background: #f1f5f9;
+    }
+
+    body.dark .theme-toggle:hover {
+      background: #334155;
+    }
+
+    /* Main content - scrollable area between fixed header/footer */
+    main {
+      flex: 1;
+      margin-top: 5rem; /* header height offset */
+      margin-bottom: 4.5rem; /* footer height offset */
+      padding: 1.5rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    /* Controls container */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    button {
+      border: none;
+      background: none;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .add-dice {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 2.5rem;
+      padding: 0.7rem 1.4rem;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+      background: #ffffff;
+      color: #1e293b;
+    }
+
+    .add-dice:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+
+    .roll-btn {
+      background: #0f172a;
+      color: white;
+      border-radius: 2.5rem;
+      padding: 0.8rem 2.2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      box-shadow: 0 8px 18px rgba(15,23,42,0.2);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: #0f172a;
+    }
+
+    body.dark .roll-btn {
+      background: #3b82f6;
+      box-shadow: 0 8px 18px rgba(59,130,246,0.4);
+    }
+
+    .roll-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* Dice grid */
+    .dice-grid {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1.8rem;
+      max-width: 900px;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .dice-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .dice-card {
+      background: white;
+      border-radius: 2rem;
+      padding: 1.2rem;
+      box-shadow: 0 20px 30px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid rgba(0,0,0,0.04);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .dice-card:active {
+      transform: scale(0.95);
+    }
+
+    /* Dice face styling (responsive size) */
+    .dice-face {
+      width: clamp(70px, 18vw, 100px);
+      height: clamp(70px, 18vw, 100px);
+      background: #ffffff;
+      border-radius: 1.5rem;
+      border: 2px solid #e2e8f0;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      padding: 12%;
+      gap: 2px;
+      transition: background 0.2s;
+      background: #f9fafb;
+    }
+
+    body.dark .dice-face {
+      background: #0f172a;
+      border-color: #334155;
+    }
+
+    .dot {
+      width: 100%;
+      height: 100%;
+      background: #1e293b;
+      border-radius: 50%;
+      display: block;
+      transition: background 0.2s;
+    }
+
+    body.dark .dot {
+      background: #f8fafc;
+    }
+
+    /* Hide dot by default (empty grid cell) */
+    .dot.hidden {
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .dice-label {
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .remove-btn {
+      background: transparent;
+      border: 1px solid #ef4444;
+      color: #ef4444;
+      border-radius: 2rem;
+      padding: 0.3rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    .remove-btn:hover {
+      background: rgba(239,68,68,0.08);
+    }
+
+    /* Fixed Footer */
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(0,0,0,0.05);
+      padding: 1rem 1.5rem;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #334155;
+      box-shadow: 0 -4px 15px rgba(0,0,0,0.02);
+      z-index: 50;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark footer {
+      color: #cbd5e1;
+      background: rgba(15, 23, 42, 0.9);
+      border-color: rgba(255,255,255,0.08);
+    }
+
+    .footer-name {
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    body.dark .footer-name {
+      color: white;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 500px) {
+      header {
+        padding: 0.8rem 1rem;
+      }
+      .header-title {
+        font-size: 1.3rem;
+      }
+      .dice-grid {
+        gap: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-title">
+      <span>🎲</span> Dice Roller
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark mode">
+      <span id="themeIcon">🌙</span> <span id="themeText">Dark</span>
+    </button>
+  </header>
+
+  <main>
+    <div class="controls">
+      <button class="add-dice" id="addDiceBtn">
+        <span>➕</span> Add Dice
+      </button>
+      <button class="roll-btn" id="rollAllBtn">
+        <span>🎲</span> Roll All
+      </button>
+    </div>
+
+    <div class="dice-grid" id="diceContainer">
+      <!-- Dice will be dynamically added here -->
+    </div>
+  </main>
+
+  <footer>
+    <span>Made with 🎲 by <span class="footer-name">Khurram Rashid</span></span>
+  </footer>
+
+  <script>
+    (function() {
+      // ---- State ----
+      let diceCount = 2; // Start with 2 dice
+      let diceValues = []; // current values for each die
+      let darkMode = false;
+
+      // DOM elements
+      const diceContainer = document.getElementById('diceContainer');
+      const addDiceBtn = document.getElementById('addDiceBtn');
+      const rollAllBtn = document.getElementById('rollAllBtn');
+      const themeToggle = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
+      const themeText = document.getElementById('themeText');
+      const body = document.body;
+
+      // ---- Helper: random dice value 1-6 ----
+      function rollDie() {
+        return Math.floor(Math.random() * 6) + 1;
+      }
+
+      // ---- Initialize dice values array based on count ----
+      function syncDiceValuesArray() {
+        // If array is shorter, fill with random values; if longer, trim
+        while (diceValues.length < diceCount) {
+          diceValues.push(rollDie());
+        }
+        if (diceValues.length > diceCount) {
+          diceValues = diceValues.slice(0, diceCount);
+        }
+      }
+
+      // ---- Generate dot configuration for a value (1-6) ----
+      function getDotPattern(value) {
+        // Using 3x3 grid, positions: top-left(0,0), top-mid(0,1), top-right(0,2)
+        // mid-left(1,0), center(1,1), mid-right(1,2)
+        // bottom-left(2,0), bottom-mid(2,1), bottom-right(2,2)
+        const pattern = Array(9).fill(false);
+        switch(value) {
+          case 1:
+            pattern[4] = true; // center
+            break;
+          case 2:
+            pattern[2] = true; // top-right
+            pattern[6] = true; // bottom-left
+            break;
+          case 3:
+            pattern[2] = true; // top-right
+            pattern[4] = true; // center
+            pattern[6] = true; // bottom-left
+            break;
+          case 4:
+            pattern[0] = true; // top-left
+            pattern[2] = true; // top-right
+            pattern[6] = true; // bottom-left
+            pattern[8] = true; // bottom-right
+            break;
+          case 5:
+            pattern[0] = true;
+            pattern[2] = true;
+            pattern[4] = true;
+            pattern[6] = true;
+            pattern[8] = true;
+            break;
+          case 6:
+            pattern[0] = true;
+            pattern[2] = true;
+            pattern[3] = true;
+            pattern[5] = true;
+            pattern[6] = true;
+            pattern[8] = true;
+            break;
+          default: break;
+        }
+        return pattern;
+      }
+
+      // ---- Create HTML for a single die based on index and value ----
+      function createDiceElement(index, value) {
+        const pattern = getDotPattern(value);
+        const diceContainerDiv = document.createElement('div');
+        diceContainerDiv.className = 'dice-container';
+        diceContainerDiv.setAttribute('data-index', index);
+
+        // Dice card (clickable to roll individually)
+        const diceCard = document.createElement('div');
+        diceCard.className = 'dice-card';
+        diceCard.setAttribute('aria-label', `Dice ${index+1}, value ${value}`);
+        
+        // Dice face with dots
+        const diceFace = document.createElement('div');
+        diceFace.className = 'dice-face';
+        
+        // Create 9 grid cells (3x3)
+        for (let i = 0; i < 9; i++) {
+          const dotSpan = document.createElement('span');
+          dotSpan.className = 'dot';
+          if (!pattern[i]) {
+            dotSpan.classList.add('hidden');
+          }
+          diceFace.appendChild(dotSpan);
+        }
+        
+        diceCard.appendChild(diceFace);
+        
+        // Label with remove button
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'dice-label';
+        
+        const valueSpan = document.createElement('span');
+        valueSpan.textContent = `🎲 ${value}`;
+        valueSpan.className = 'value-text';
+        
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-btn';
+        removeBtn.innerHTML = '✕';
+        removeBtn.setAttribute('aria-label', 'Remove dice');
+        removeBtn.addEventListener('click', (e) => {
+          e.stopPropagation(); // prevent triggering dice roll
+          removeDice(index);
+        });
+        
+        labelDiv.appendChild(valueSpan);
+        labelDiv.appendChild(removeBtn);
+        
+        diceContainerDiv.appendChild(diceCard);
+        diceContainerDiv.appendChild(labelDiv);
+        
+        // Touch/click on dice card to roll this single die
+        diceCard.addEventListener('click', (e) => {
+          e.stopPropagation();
+          rollSingleDice(index);
+        });
+        
+        return diceContainerDiv;
+      }
+
+      // ---- Render all dice based on current state ----
+      function renderAllDice() {
+        diceContainer.innerHTML = '';
+        syncDiceValuesArray();
+        
+        for (let i = 0; i < diceCount; i++) {
+          const value = diceValues[i];
+          const diceEl = createDiceElement(i, value);
+          diceContainer.appendChild(diceEl);
+        }
+      }
+
+      // ---- Roll all dice ----
+      function rollAllDice() {
+        for (let i = 0; i < diceCount; i++) {
+          diceValues[i] = rollDie();
+        }
+        renderAllDice();
+      }
+
+      // ---- Roll a single die by index ----
+      function rollSingleDice(index) {
+        if (index >= 0 && index < diceCount) {
+          diceValues[index] = rollDie();
+          renderAllDice();
+        }
+      }
+
+      // ---- Add a new dice ----
+      function addDice() {
+        // Maximum 12 dice for reasonable screen space
+        if (diceCount >= 12) {
+          alert("Maximum 12 dice allowed for best experience.");
+          return;
+        }
+        diceCount++;
+        diceValues.push(rollDie()); // add new random value
+        renderAllDice();
+      }
+
+      // ---- Remove a dice by index ----
+      function removeDice(index) {
+        if (diceCount <= 1) {
+          alert("You need at least one die to roll!");
+          return;
+        }
+        // Remove from array
+        diceValues.splice(index, 1);
+        diceCount--;
+        renderAllDice();
+      }
+
+      // ---- Theme toggle ----
+      function setTheme(isDark) {
+        darkMode = isDark;
+        if (isDark) {
+          body.classList.add('dark');
+          themeIcon.textContent = '☀️';
+          themeText.textContent = 'Light';
+          themeToggle.setAttribute('aria-label', 'Switch to light mode');
+        } else {
+          body.classList.remove('dark');
+          themeIcon.textContent = '🌙';
+          themeText.textContent = 'Dark';
+          themeToggle.setAttribute('aria-label', 'Switch to dark mode');
+        }
+      }
+
+      function toggleTheme() {
+        setTheme(!darkMode);
+        // Optional: save preference
+        try {
+          localStorage.setItem('diceRollerTheme', darkMode ? 'dark' : 'light');
+        } catch (e) {}
+      }
+
+      // ---- Event Listeners ----
+      addDiceBtn.addEventListener('click', addDice);
+      rollAllBtn.addEventListener('click', rollAllDice);
+      themeToggle.addEventListener('click', toggleTheme);
+
+      // ---- Initial load ----
+      function initialize() {
+        // Load theme preference
+        try {
+          const savedTheme = localStorage.getItem('diceRollerTheme');
+          if (savedTheme === 'dark') {
+            setTheme(true);
+          } else {
+            setTheme(false);
+          }
+        } catch (e) {
+          setTheme(false);
+        }
+        
+        // Set initial dice count to 2, values random
+        diceCount = 2;
+        diceValues = [rollDie(), rollDie()];
+        renderAllDice();
+      }
+
+      initialize();
+
+      // Optional: Keyboard shortcut for rolling (R key)
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'r' || e.key === 'R') {
+          // Prevent if typing in input, but we have no inputs, so safe
+          e.preventDefault();
+          rollAllDice();
+        }
+      });
+
+    })();
+  </script>
+</body>
+</html>
