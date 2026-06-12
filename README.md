@@ -1,82 +1,134 @@
-🎲 Dice Roller
+# 🎲 Dice Roller
 
-A modern, responsive, and interactive Dice Roller web application built with HTML, CSS, and JavaScript. The app allows users to roll multiple dice, add or remove dice dynamically, and switch between light and dark themes.
+A modern, responsive, and interactive dice rolling web application built with HTML, CSS, and JavaScript.
 
-Features
-🎲 Roll individual dice by clicking on them
-🎲 Roll all dice simultaneously with one button
-➕ Add new dice dynamically
-✕ Remove unwanted dice
-🌙 Dark Mode / ☀️ Light Mode toggle
-💾 Theme preference saved using Local Storage
-📱 Fully responsive design for mobile, tablet, and desktop
-⌨️ Keyboard shortcut (R) to roll all dice
-🎨 Modern UI with glassmorphism-inspired styling
-Technologies Used
-HTML5
-CSS3
-Vanilla JavaScript
-Google Fonts (Inter)
-Project Structure
+---
+
+### ✨ Features
+
+- 🎲 Roll individual dice by clicking on them
+- 🎲 Roll all dice simultaneously
+- ➕ Add new dice dynamically
+- ❌ Remove dice individually
+- 🌙 Light and Dark mode support
+- 💾 Theme preference saved using Local Storage
+- 📱 Fully responsive design
+- ⌨️ Keyboard shortcut (R) to roll all dice
+
+---
+
+### 🛠️ Technologies Used
+
+- HTML5
+- CSS3
+- JavaScript (ES6)
+- Google Fonts (Inter)
+
+---
+
+### 📂 Project Structure
+
 dice-roller/
-│
-├── index.html      # Main application file
-└── README.md       # Project documentation
-How to Use
-1. Open the Application
+├── index.html
+└── README.md
 
-Simply open index.html in any modern web browser.
+---
 
-2. Roll All Dice
+### 🚀 Getting Started
 
-Click the Roll All button to generate new random values for every die.
+#### 1. Download or Clone the Project
 
-3. Roll a Single Die
+git clone https://github.com/your-username/dice-roller.git
 
-Click directly on any die to roll only that die.
+#### 2. Open the Application
 
-4. Add a Die
+Open the `index.html` file in your browser.
 
-Click the Add Dice button to add another die.
+#### 3. Start Rolling
 
-5. Remove a Die
+- Click **Roll All** to roll every die.
+- Click any die to roll it individually.
+- Add or remove dice as needed.
 
-Click the ✕ button beneath a die to remove it.
+---
 
-6. Switch Theme
+### 🎮 Usage
 
-Use the theme toggle button in the header to switch between light and dark modes.
+#### Roll a Single Die
 
-Keyboard Shortcut
-Key	Action
-R	Roll all dice
-Limits
-Minimum Dice: 1
-Maximum Dice: 12
+Click directly on a dice card to generate a new random value.
 
-These limits help maintain a clean and responsive layout.
+#### Roll All Dice
 
-Theme Persistence
+Use the **Roll All** button to reroll every die currently displayed.
 
-The selected theme is stored in the browser using Local Storage, so your preference remains active after refreshing or reopening the page.
+#### Add Dice
 
-Responsive Design
+Click the **Add Dice** button to add another die.
 
-The application is optimized for:
+#### Remove Dice
 
-Mobile Phones
-Tablets
-Laptops
-Desktop Screens
+Click the **✕** button beneath a die to remove it.
 
-Dice sizes automatically adjust based on screen width.
+#### Change Theme
 
-Accessibility Features
-ARIA labels for buttons and dice
-Keyboard support
-Touch-friendly controls
-High-contrast dark mode
-Author
+Use the theme toggle button in the header to switch between Light and Dark mode.
+
+---
+
+### 📊 Application Limits
+
+| Feature | Value |
+|----------|--------|
+| Minimum Dice | 1 |
+| Maximum Dice | 12 |
+| Dice Values | 1 – 6 |
+| Themes | Light & Dark |
+
+---
+
+### 💾 Theme Persistence
+
+The selected theme is automatically saved using Local Storage, allowing the application to remember your preference even after refreshing or reopening the page.
+
+---
+
+### 📱 Responsive Design
+
+Optimized for:
+
+- Mobile Phones
+- Tablets
+- Laptops
+- Desktop Screens
+
+Dice sizes automatically adjust for different screen sizes.
+
+---
+
+### ♿ Accessibility
+
+- ARIA labels for interactive elements
+- Keyboard support
+- Touch-friendly controls
+- High-contrast dark mode
+- Responsive layout
+
+---
+
+### 🔮 Future Enhancements
+
+- Dice rolling animations
+- Sound effects
+- Roll history tracking
+- Score calculation
+- Custom dice themes
+- Multiplayer support
+- Statistics dashboard
+
+---
+
+### 👨‍💻 Author
 
 Khurram Rashid
 
